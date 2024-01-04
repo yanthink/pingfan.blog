@@ -1,0 +1,98 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/user/index"
+    },
+    {
+      "path": "pages/search/index",
+      "style": {
+        "navigationBarTitleText": "文章搜索"
+      }
+    },
+    {
+      "path": "pages/user/favorites",
+      "style": {
+        "navigationBarTitleText": "我的收藏"
+      }
+    },
+    {
+      "path": "pages/user/comments",
+      "style": {
+        "navigationBarTitleText": "我的评论"
+      }
+    },
+    {
+      "path": "pages/user/likes",
+      "style": {
+        "navigationBarTitleText": "我的点赞"
+      }
+    },
+    {
+      "path": "pages/notifications/index",
+      "style": {
+        "navigationBarTitleText": "消息通知"
+      },
+    },
+    {
+      "path": "pages/settings/index",
+      "style": {
+        "navigationBarTitleText": "个人设置"
+      }
+    },
+    {
+      "path": "pages/article/details",
+      "style": {
+        "navigationBarTitleText": "文章详情"
+      }
+    },
+    {
+      "path": "pages/article/comments",
+      "style": {
+        "navigationBarTitleText": "文章评论"
+      }
+    },
+    {
+      "path": "pages/scan/login"
+    }
+  ],
+  "tabBar": {
+    "color": "#595959",
+    "selectedColor": "#13C2C2",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "position": "bottom",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "博文",
+        "iconPath": "./static/images/read_81x81.png",
+        "selectedIconPath": "./static/images/read_selected_81x81.png"
+      },
+      {
+        "pagePath": "pages/user/index",
+        "text": "我的",
+        "iconPath": "./static/images/user_81x81.png",
+        "selectedIconPath": "./static/images/user_selected_81x81.png"
+      },
+    ],
+  },
+  "globalStyle": {
+    "backgroundColor": "#f5f5f5",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "平凡的博客",
+    "navigationBarTextStyle": "black"
+  },
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  }
+}

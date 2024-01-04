@@ -1,0 +1,66 @@
+[app]
+env = "local"
+debug = true
+name = "blog"
+key = "e65c8cb6e81489a3acf7619c780ee64f967113d020f08c4928ac2beee78d24b6"
+proxies = ["127.0.0.1"] # 信任的代理服务ip，支持掩码格式 eg: 192.168.1.0/24
+url = "http://localhost:8888"
+site_url = "http://localhost:3000"
+
+[mysql]
+host = "127.0.0.1"
+port = 3306
+user = "root"
+pass = ""
+name = "blog"
+max_open_connections = 2000 # 最大连接数
+max_idle_connections = 500 # 最大空闲连接数
+max_life_seconds = 1800 # 链接的过期时间
+
+[redis]
+host = "127.0.0.1"
+port = 6379
+pass = ""
+db = 0
+prefix = "blog:"
+
+[cache]
+store = "redis"
+
+[jwt]
+key = "b0ec04a4003954c4c283f6959d0af76cdef765ab6eba3e9116dca6275bd9dad6"
+
+[snowflake]
+epoch = 1689918431021 # 可以设置成上线日期的时间戳，这样起始ID会小很多
+node = 0 # 不同机器必须使用不同的node，需要确保全局唯一
+
+[storage]
+disk = "public"
+resource_store_disk = "public" # 支持 public、oss
+
+[storage.oss]
+access_key_id = ""
+access_key_secret = ""
+endpoint = ""
+bucket = ""
+domain = ""
+ssl = true
+
+[mail]
+host = "smtp.example.com"
+port = 587
+username = ""
+password = ""
+from_addr = "your_email@example.com"
+from_name = "blog"
+
+[zincsearch]
+url = "http://localhost:4080"
+index = "blog"
+shard_num = 1
+user_id = "admin"
+password = "Complexpass#123"
+
+[mini_program.wechat]
+appid = ""
+secret = ""

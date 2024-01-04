@@ -1,0 +1,6 @@
+/.idea
+/.vscode
+/.fleet
+.DS_Store
+
+/server

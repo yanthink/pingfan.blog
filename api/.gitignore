@@ -1,0 +1,9 @@
+/.idea
+/.vscode
+/.fleet
+.DS_Store
+*.local.toml
+test.go
+/logs
+/sql
+/zincsearch

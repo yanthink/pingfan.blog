@@ -1,0 +1,30 @@
+@import '~github-markdown-css/github-markdown-light.css';
+@import '~highlight.js/styles/atom-one-dark.css';
+@import '~katex/dist/katex.css';
+@import '@/components/Viewer/themes/prism-material-dark.css';
+@import '@/components/Viewer/index.scss';
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.markdown-body {
+  a {
+    //color: inherit;
+    text-decoration: none;
+  }
+}
+
+.ant-pro-layout-container {
+  min-height: 100vh !important;
+}
+
+.bytemd-fullscreen.bytemd {
+  z-index: 999;
+}
+
+mark {
+  background: #ffe58f;
+}
