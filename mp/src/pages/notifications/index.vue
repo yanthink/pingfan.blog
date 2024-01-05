@@ -22,6 +22,8 @@
           </navigator>
         </view>
       </view>
+
+      <loadmore :status="loadMoreStatus" />
     </view>
   </view>
 </template>
@@ -34,6 +36,7 @@ import { onReachBottom } from '@dcloudio/uni-app';
 import type { Nodes } from 'hast';
 import { commentStrategy, toHast } from '@/markdown';
 import { prettyTime } from '@/utils';
+import Loadmore from '@/components/loadmore/loadmore.vue';
 
 interface Notification extends API.Notification {
   subjectNode: Nodes;

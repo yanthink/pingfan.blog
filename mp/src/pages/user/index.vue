@@ -13,10 +13,12 @@
           <text class="weui-cell__bd">我的收藏</text>
           <text class="weui-cell__ft"></text>
         </navigator>
+        <!-- #ifndef MP-WEIXIN -->
         <navigator class="weui-cell weui-cell_access" url="comments">
           <text class="weui-cell__bd">我的评论</text>
           <text class="weui-cell__ft"></text>
         </navigator>
+        <!-- #endif -->
         <navigator class="weui-cell weui-cell_access" url="likes">
           <text class="weui-cell__bd">我的点赞</text>
           <text class="weui-cell__ft"></text>

@@ -88,7 +88,15 @@ const content = ref('');
 const focus = ref(false);
 const bottom = ref(0);
 
-watch(focus, focus => focus ? emit('focus') : emit('blur'));
+watch(focus, focus => {
+  // #ifdef MP-WEIXIN
+  if (focus) {
+    uni.showToast({ title: '微信小程序暂不支持评论' });
+    return
+  }
+  // #endif
+  focus ? emit('focus') : emit('blur')
+});
 
 function keyboardheightchange(e: any) {
   bottom.value = e.detail.height;

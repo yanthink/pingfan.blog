@@ -35,6 +35,7 @@ import { useLockFn, useLoginSwitch } from '@/hooks';
 import { getUserFavorites } from '@/services';
 import { prettyTime, prettyNumber } from '@/utils';
 import { onReachBottom } from '@dcloudio/uni-app';
+import Loadmore from '@/components/loadmore/loadmore.vue';
 
 const loading = ref(false);
 const favorites = ref<API.Favorite[]>([]);

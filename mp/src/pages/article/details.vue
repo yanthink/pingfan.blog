@@ -14,8 +14,23 @@
         <view v-else style="display: flex; justify-content: center; padding: 24px">
           <loading type="circle" :font-size="48" />
         </view>
+        <!-- #ifdef MP-WEIXIN -->
+        <view class="actions">
+          <like size="large" :liked="article.hasLiked" @click="like">
+            <template #suffix>
+              <text>{{ article.likeCount }}</text>
+            </template>
+          </like>
+          <favorite size="large" :favorited="article.hasFavorited" @click="favorite">
+            <template #suffix>
+              <text>{{ article.favoriteCount }}</text>
+            </template>
+          </favorite>
+        </view>
+        <!-- #endif -->
       </view>
 
+      <!-- #ifndef MP-WEIXIN -->
       <view id="comments" class="comments">
         <view class="comments-header">评论 {{ article.commentCount }}</view>
         <view
@@ -30,8 +45,10 @@
           />
         </view>
       </view>
+      <!-- #endif -->
     </view>
 
+    <!-- #ifndef MP-WEIXIN -->
     <loadmore :status="loadMoreStatus" />
     <view style="height: 40px" />
     <safearea />
@@ -51,6 +68,7 @@
       />
       <safearea />
     </view>
+    <!-- #endif -->
   </view>
 </template>
 
@@ -59,16 +77,21 @@ import { computed, ref } from 'vue';
 import { onLoad, onReachBottom } from '@dcloudio/uni-app';
 import { getArticle, likeArticle, favoriteArticle, getComments, upvoteComment, createComment } from '@/services';
 import { prettyNumber, prettyTime } from '@/utils';
-import { useHast, useLockFn, useAuthFn } from '@/hooks';
+import { useHast, useLockFn, useAuthFn, useUser } from '@/hooks';
 import { articleStrategy, toHast } from '@/markdown';
 import Viewer from '@/components/viewer/viewer.vue';
 import Loading from '@/components/loading/loading.vue';
 import Comment from '@/components/comment/comment.vue';
 import Loadmore from '@/components/loadmore/loadmore.vue';
-import CommentEditor, { type CommentEditorInstance } from "@/components/comment-editor/comment-editor.vue";
-import Safearea from "@/components/safearea/safearea.vue";
+import CommentEditor from '@/components/comment-editor/comment-editor.vue';
+import type { CommentEditorInstance } from '@/components/comment-editor/comment-editor.vue';
+import Safearea from '@/components/safearea/safearea.vue';
+import Like from '@/components/like/like.vue';
+import Favorite from '@/components/favorite/favorite.vue';
 
 let articleId = 0;
+
+const { user } = useUser();
 
 const article = ref<API.Article>({});
 const { node, setChunkHast } = useHast();
@@ -125,7 +148,9 @@ onLoad(async query => {
   const hast = toHast(data.content!, articleStrategy);
   await setChunkHast(hast);
 
+  // #ifndef MP-WEIXIN
   queryComments();
+  // #endif
 });
 
 async function scrollToComments() {
@@ -142,7 +167,7 @@ const favorite = useAuthFn(async () => {
   article.value = {
     ...article.value,
     favoriteCount: data.favoriteCount,
-    hasFavorited: data.hasFavorited
+    hasFavorited: data.hasFavorited,
   };
 });
 
@@ -209,6 +234,13 @@ onReachBottom(loadMore);
 .meta {
   font-size: 14px;
   margin-top: 8px;
+}
+
+.actions {
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  grid-gap: 24px;
 }
 
 .comments {

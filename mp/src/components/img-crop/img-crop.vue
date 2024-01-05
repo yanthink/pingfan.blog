@@ -203,7 +203,6 @@ async function handleCrop() {
   uni.showLoading({ title: '正在处理...', mask: true });
 
   try {
-    await crop();
     await Promise.race([crop(), new Promise(resolve => timer = setTimeout(resolve, 30_000))]);
   } finally {
     clearTimeout(timer);

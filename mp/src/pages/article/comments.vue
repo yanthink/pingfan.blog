@@ -66,7 +66,8 @@ import { useLockFn, useAuthFn, useNextTick, useUser } from '@/hooks';
 import { getComment, getComments, upvoteComment, createComment } from "@/services";
 import Comment from '@/components/comment/comment.vue';
 import Loadmore from '@/components/loadmore/loadmore.vue';
-import CommentEditor, { type CommentEditorInstance } from "@/components/comment-editor/comment-editor.vue";
+import CommentEditor from "@/components/comment-editor/comment-editor.vue";
+import type {  CommentEditorInstance } from "@/components/comment-editor/comment-editor.vue";
 import Safearea from "@/components/safearea/safearea.vue";
 import { getProcessor, stripTagsStrategy } from "@/markdown";
 

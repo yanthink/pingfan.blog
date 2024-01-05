@@ -188,9 +188,9 @@ const sendCode = useLockFn(async () => {
 });
 
 const submit = useLockFn(async () => {
-  const wasChanged = Object.keys(user.value).some(key => {
+  const wasChanged = ['avatar', 'name', 'email', 'meta'].some(key => {
     if (key === 'meta') {
-      return JSON.stringify(formData.value[key]) !== JSON.stringify(user.value[key]);
+      return JSON.stringify(formData.value[key]) !== JSON.stringify(user.value[key] ?? {});
     }
 
     return formData.value[key as keyof API.User] !== user.value[key as keyof API.User];

@@ -73,7 +73,7 @@ export function useHast() {
 
   let chunking = false;
 
-  async function setChunkHast(hast: Root, chunkSize = 500) {
+  async function setChunkHast(hast: Root, chunkSize = 300) {
     if (chunking) return;
 
     chunking = true;

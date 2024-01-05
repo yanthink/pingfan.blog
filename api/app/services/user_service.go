@@ -10,6 +10,7 @@ import (
 	"blog/app/models"
 	"blog/app/pagination"
 	"blog/app/resource"
+	"blog/app/storage"
 	"blog/app/websocket"
 	"blog/config"
 	"context"
@@ -193,7 +194,7 @@ func (s *userService) Update(id int64, user *models.User) *models.User {
 	user.ID = id
 
 	rType := resource.Avatar
-	if user.Avatar != "" && rType.IsUploadPath(user.Avatar) {
+	if user.Avatar != "" && rType.IsUploadPath(storage.Disk().ParsePath(user.Avatar)) {
 		user.Avatar, _ = Resource.CopyToStorePath(user.Avatar, rType)
 	}
 
