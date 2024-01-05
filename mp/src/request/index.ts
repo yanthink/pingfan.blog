@@ -20,11 +20,14 @@ request.interceptor.response = async (res, options) => {
     try {
       res.data = JSON.parse(res.data);
     } catch (e) {
-      //
+      (res.data as any) = {
+        code: res.statusCode
+      }
     }
   }
 
   switch (res.data.code) {
+    case 401:
     case 401_001:
       uni.$emit('logout');
       break;

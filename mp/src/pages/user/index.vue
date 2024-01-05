@@ -2,8 +2,8 @@
   <view class="page" data-weui-theme="light">
     <view class="page__bd">
       <view class="profile">
-        <view class="avatar" :class="{ 'avatar-default': defaultAvatar }">
-          <image :src="avatar" @error="avatarLoadError = true" />
+        <view class="avatar" :class="{ 'avatar-default': !user.avatar }">
+          <image :src="avatar" />
         </view>
         <view class="username">{{ user.name || '暂未设置' }}</view>
       </view>
@@ -67,9 +67,7 @@ onShow(() => {
   }
 });
 
-const avatarLoadError = ref(false);
-const defaultAvatar = computed(() => !user.value.avatar || avatarLoadError.value);
-const avatar = computed(() => defaultAvatar.value ? '/static/images/user.png' : user.value.avatar);
+const avatar = computed(() => user.value.avatar || '/static/images/user.png');
 </script>
 
 <style lang="scss" scoped>

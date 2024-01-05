@@ -12,9 +12,8 @@
               <text class="weui-cell__bd">头像</text>
               <view class="weui-cell__ft" style="height: 24px">
                 <image
-                    class="avatar" :class="{ 'avatar-default': defaultAvatar }"
+                    class="avatar" :class="{ 'avatar-default': !formData.avatar }"
                     :src="avatar"
-                    @error="avatarLoadError = true"
                 />
               </view>
             </view>
@@ -110,15 +109,16 @@ const token = useToken();
 const { leftSeconds, setLeftSeconds, start } = useCountdown();
 
 const formData = ref<API.User & { emailCode?: string; emailCodeKey?: string }>({
+  name: '',
+  avatar: '',
+  email: '',
   meta: {
     emailNotify: 0,
   },
 });
 const errors = ref<Record<string, boolean>>({});
 
-const avatarLoadError = ref(false);
-const defaultAvatar = computed(() => !user.value.avatar || avatarLoadError.value);
-const avatar = computed(() => defaultAvatar.value ? '/static/images/user.png' : formData.value.avatar);
+const avatar = computed(() => formData.value.avatar || '/static/images/user.png');
 const chooseAvatarUrl = ref('');
 
 watch(user, user => formData.value = {
@@ -166,6 +166,7 @@ async function updateAvatar(filePath: string) {
   });
 
   const res = JSON.parse(data);
+
   formData.value.avatar = res.data.url;
 }
 
@@ -201,8 +202,8 @@ const submit = useLockFn(async () => {
   }
 
   try {
-    await updateUserProfile(formData.value);
-    user.value = { ...user.value, ...formData.value };
+    const { data } = await updateUserProfile(formData.value);
+    user.value = { ...user.value, ...data };
     uni.showToast({ title: '修改成功' });
   } catch (e: any) {
     if (e?.response?.data?.errors) {
