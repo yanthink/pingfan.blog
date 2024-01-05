@@ -3,6 +3,7 @@ package rules
 import (
 	"blog/app/captcha"
 	"github.com/go-playground/validator/v10"
+	"reflect"
 	"strings"
 )
 
@@ -28,9 +29,23 @@ func ValidateCaptcha(fl validator.FieldLevel) bool {
 		}
 	}
 
+	codeField := fl.Field()
+	for codeField.Kind() == reflect.Ptr {
+		codeField = codeField.Elem()
+	}
 	code := fl.Field().String()
-	account := fl.Top().FieldByName(accountFieldName).String()
-	hash := fl.Top().FieldByName(hashFieldName).String()
+
+	accountField := fl.Top().FieldByName(accountFieldName)
+	for accountField.Kind() == reflect.Ptr {
+		accountField = accountField.Elem()
+	}
+	account := accountField.String()
+
+	hashField := fl.Top().FieldByName(hashFieldName)
+	for hashField.Kind() == reflect.Ptr {
+		hashField = hashField.Elem()
+	}
+	hash := hashField.String()
 
 	return captcha.New().SetType(CaptchaType).Check(account, code, hash)
 }
