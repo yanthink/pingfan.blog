@@ -36,7 +36,7 @@ func (*userController) UpdateProfile(c *gin.Context) {
 	}
 
 	responses.Json(c, services.User.Update(c.GetInt64("userId"), &models.User{
-		Name:   &req.Name,
+		Name:   req.Name,
 		Email:  req.Email,
 		Avatar: req.Avatar,
 		Meta:   meta,

@@ -94,7 +94,7 @@ func Send(notifiables []Notifiable) (err error) {
 		// 邮件通知
 		if notifiable.ToMail() {
 			users = helpers.Filter(users, func(_ int, user *models.User) bool {
-				if user.Email == "" || user.Meta == nil {
+				if user.Email == nil || user.Meta == nil {
 					return false
 				}
 
@@ -110,9 +110,9 @@ func Send(notifiables []Notifiable) (err error) {
 				body, _ := markdown.Parse([]byte(fmt.Sprintf("%s\n\n%s\n\nThanks.\n\n<h3>%s</h3>", subject, message, config.App.Name)))
 
 				err = mail.New().
-					AppendTo(users[0].Email).
+					AppendTo(*users[0].Email).
 					AppendCc(helpers.Map(users[1:], func(_ int, user *models.User) string {
-						return user.Email
+						return *user.Email
 					})...).
 					Send(stripTagsSubject, body)
 

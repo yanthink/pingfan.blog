@@ -7,12 +7,12 @@ import (
 )
 
 type UpdateProfileRequest struct {
-	Name         string `form:"name" json:"name" label:"用户名" binding:"required,username" message:"用户名格式不正确"`
-	Email        string `form:"email" json:"email" binding:"omitempty,email"`
-	EmailCode    string `form:"emailCode" json:"emailCode" binding:"omitempty,captcha=Email EmailCodeKey" message:"邮箱验证码格式不正确"`
-	EmailCodeKey string `form:"emailCodeKey" json:"emailCodeKey"`
-	Avatar       string `form:"avatar" json:"avatar" label:"头像" binding:"omitempty,url"`
-	Meta         *Meta  `form:"meta" json:"meta"`
+	Name         *string `form:"name" json:"name" label:"用户名" binding:"required,username" message:"用户名格式不正确"`
+	Email        *string `form:"email" json:"email" binding:"omitempty,email"`
+	EmailCode    string  `form:"emailCode" json:"emailCode" binding:"omitempty,captcha=Email EmailCodeKey" message:"邮箱验证码格式不正确"`
+	EmailCodeKey string  `form:"emailCodeKey" json:"emailCodeKey"`
+	Avatar       string  `form:"avatar" json:"avatar" label:"头像" binding:"omitempty,url"`
+	Meta         *Meta   `form:"meta" json:"meta"`
 }
 
 func UpdateProfileValidate(c *gin.Context) (r *UpdateProfileRequest) {
@@ -21,7 +21,7 @@ func UpdateProfileValidate(c *gin.Context) (r *UpdateProfileRequest) {
 
 	user := services.User.GetAuthUser(c)
 
-	if r.Email != "" && r.Email != user.Email {
+	if r.Email != nil && (user.Email == nil || *r.Email != *user.Email) {
 		if r.EmailCode == "" {
 			panic(&validation.Error{
 				Message: "邮箱验证码不能为空",
@@ -32,8 +32,8 @@ func UpdateProfileValidate(c *gin.Context) (r *UpdateProfileRequest) {
 		}
 	}
 
-	if user.Name == nil || r.Name != *user.Name {
-		if _, err := services.User.GetByName(r.Name); err == nil {
+	if user.Name == nil || *r.Name != *user.Name {
+		if _, err := services.User.GetByName(*r.Name); err == nil {
 			panic(&validation.Error{
 				Message: "用户名已经存在",
 				Errors: map[string][]string{

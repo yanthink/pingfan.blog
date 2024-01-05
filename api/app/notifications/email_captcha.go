@@ -12,7 +12,7 @@ type EmailCaptcha struct {
 }
 
 func (c *EmailCaptcha) Users() (users models.Users) {
-	users = models.Users{&models.User{Email: c.Email}}
+	users = models.Users{&models.User{Email: &c.Email}}
 
 	return
 }
