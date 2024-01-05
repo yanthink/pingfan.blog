@@ -103,6 +103,7 @@ const Main: React.FC<MainProps> = () => {
             z-index: 0;
             background: url("https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg");
             inset: 24px;
+            pointer-events: none;
           }
 
           .container :global(.ant-pro-form-login-page-container) {

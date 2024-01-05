@@ -32,7 +32,7 @@ func UpdateProfileValidate(c *gin.Context) (r *UpdateProfileRequest) {
 		}
 	}
 
-	if r.Name != user.Name {
+	if user.Name == nil || r.Name != *user.Name {
 		if _, err := services.User.GetByName(r.Name); err == nil {
 			panic(&validation.Error{
 				Message: "用户名已经存在",

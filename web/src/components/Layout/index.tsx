@@ -143,6 +143,12 @@ const Layout: React.FC<LayoutProps> = (props) => {
           max-width: 1200px;
           text-align: center;
           margin: auto;
+          a {
+            color: ${themeToken.colorText};
+            &:hover {
+              text-decoration: underline;
+            }
+          }
         }
 
         .logo {
@@ -269,7 +275,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
               </div>
             </Content>
             <Footer>
-              <div className="footer-main">©2023 平凡的博客 粤ICP备18080782号-1</div>
+              <div className="footer-main">©2023 平凡的博客 <a href="https://beian.miit.gov.cn" target="_blank">粤ICP备18080782号-1</a></div>
             </Footer>
           </AntdLayout>
           <Drawer
