@@ -15,7 +15,7 @@ func (*LikeNotify) Handle(event any) (err error) {
 		return
 	}
 
-	if e.Like.DeletedAt.Valid || e.Like.UpdatedAt != nil && !e.Like.CreatedAt.Equal(*e.Like.UpdatedAt) {
+	if e.Like.DeletedAt != nil || e.Like.UpdatedAt != nil && !e.Like.CreatedAt.Equal(*e.Like.UpdatedAt) {
 		return
 	}
 

@@ -6,7 +6,7 @@ export default async function Home({ searchParams }: { searchParams?: Record<str
   const res = await request<API.Article[]>(`/api/articles/search?${new URLSearchParams({
     ...searchParams,
     include: 'User,Tags',
-  })}`, { cache: 'no-cache' });
+  })}`, { cache: 'no-store' });
 
   return <Main total={res.total ?? 0} articles={res.data} />;
 }

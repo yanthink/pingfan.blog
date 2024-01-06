@@ -16,6 +16,7 @@ export async function updateComment(id: number | string, data: Record<string, an
   return request<API.Comment>(`/api/comments/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
+    revalidate: { paths: [`/articles/${data['articleId']}`] },
   });
 }
 

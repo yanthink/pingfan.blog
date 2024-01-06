@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 async function getAuthUser(): Promise<API.User | undefined> {
   const token = cookies().get(process.env.NEXT_PUBLIC_TOKEN_KEY ?? 'token')?.value ?? '';
   if (token) {
-    const { data } = await request<API.User>('/api/user');
+    const { data } = await request<API.User>('/api/user', { cache: 'no-store' });
 
     return data;
   }

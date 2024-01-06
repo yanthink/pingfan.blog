@@ -223,8 +223,8 @@ func (s *articleService) Like(id, userId int64) *models.Article {
 	if app.DB.Unscoped().Where(&like).FirstOrInit(&like).RowsAffected == 0 {
 		app.DB.Create(&like)
 	} else {
-		if like.DeletedAt.Valid { // 恢复
-			like.DeletedAt = &gorm.DeletedAt{}
+		if like.DeletedAt != nil { // 恢复
+			like.DeletedAt = nil
 		} else { // 删除
 			like.DeletedAt = &gorm.DeletedAt{
 				Time:  time.Now(),
@@ -235,7 +235,7 @@ func (s *articleService) Like(id, userId int64) *models.Article {
 		app.DB.Unscoped().Select("DeletedAt").Updates(&like)
 	}
 
-	article.HasLiked = !like.DeletedAt.Valid
+	article.HasLiked = like.DeletedAt == nil
 
 	if article.HasLiked {
 		article.LikeCount += 1

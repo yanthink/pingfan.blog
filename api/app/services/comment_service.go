@@ -95,8 +95,8 @@ func (s *commentService) Upvote(id, userId int64) *models.Comment {
 	if app.DB.Unscoped().Where(&upvote).FirstOrInit(&upvote).RowsAffected == 0 {
 		app.DB.Create(&upvote)
 	} else {
-		if upvote.DeletedAt.Valid { // 恢复
-			upvote.DeletedAt = &gorm.DeletedAt{}
+		if upvote.DeletedAt != nil { // 恢复
+			upvote.DeletedAt = nil
 		} else { // 删除
 			upvote.DeletedAt = &gorm.DeletedAt{
 				Time:  time.Now(),
@@ -107,7 +107,7 @@ func (s *commentService) Upvote(id, userId int64) *models.Comment {
 		app.DB.Unscoped().Select("DeletedAt").Updates(&upvote)
 	}
 
-	comment.HasUpvoted = !upvote.DeletedAt.Valid
+	comment.HasUpvoted = upvote.DeletedAt == nil
 
 	if comment.HasUpvoted {
 		comment.UpvoteCount += 1
