@@ -68,6 +68,10 @@ type GetUnlimitedQRCodeParams struct {
 }
 
 func (w *Wechat) GetUnlimitedQRCode(params *GetUnlimitedQRCodeParams) (buf bytes.Buffer) {
+	retries := 0
+
+beginning:
+
 	gatewayUrl := fmt.Sprintf("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=%s", w.getAccessToken())
 	jsonParams, _ := json.Marshal(params)
 
@@ -89,7 +93,11 @@ func (w *Wechat) GetUnlimitedQRCode(params *GetUnlimitedQRCodeParams) (buf bytes
 
 	if err = json.NewDecoder(resp.Body).Decode(&result); err == nil && result.Errcode != 0 {
 		if result.Errcode == 40001 {
-			w.clearAccessToken() // todo retry
+			w.clearAccessToken()
+			if retries == 0 {
+				retries++
+				goto beginning
+			}
 		}
 		app.Logger.Sugar().Debug("获取小程序码失败：", params, result)
 		panic(result.Errmsg)
@@ -99,6 +107,10 @@ func (w *Wechat) GetUnlimitedQRCode(params *GetUnlimitedQRCodeParams) (buf bytes
 }
 
 func (w *Wechat) MsgSecCheck(content, openid string) bool {
+	retries := 0
+
+beginning:
+
 	gatewayUrl := fmt.Sprintf("https://api.weixin.qq.com/wxa/msg_sec_check?access_token=%s", w.getAccessToken())
 
 	params := map[string]any{
@@ -133,7 +145,12 @@ func (w *Wechat) MsgSecCheck(content, openid string) bool {
 
 	if result.Errcode != 0 {
 		if result.Errcode == 40001 {
-			w.clearAccessToken() // todo retry
+			w.clearAccessToken()
+
+			if retries == 0 {
+				retries++
+				goto beginning
+			}
 		}
 		panic(result.Errmsg)
 	}
