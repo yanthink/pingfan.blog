@@ -36,7 +36,7 @@ func (s *resourceService) Upload(header *multipart.FileHeader, rType resource.Ty
 		}
 
 		tmpFile, _ := os.CreateTemp("", "resized_*.png")
-		// defer os.Remove(tmpFile.Name())
+		defer os.Remove(tmpFile.Name())
 
 		app.Logger.Sugar().Debug(tmpFile.Name())
 

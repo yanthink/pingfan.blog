@@ -76,14 +76,18 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ article, onSubmit }) => {
   }, { wait: 800 });
 
   useEffect(() => {
-    debounceQueryTags();
+    debounceQueryTags()
+  }, [debounceQueryTags]);
+
+  useEffect(() => {
+    console.log(article);
     if (article?.preview) {
       formRef.current?.setFieldValue(
         ['previews'] as any,
         [{ uid: '-1', name: 'preview.png', status: 'done', url: article.preview }],
       );
     }
-  }, []);
+  }, [article]);
 
   return (
     <Card title={article?.id ? '编辑文章' : '发布文章'}>
@@ -198,6 +202,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ article, onSubmit }) => {
           src: previewUrl,
           onVisibleChange: setPreviewVisible,
         }}
+        style={{ display: 'none' }}
       />
     </Card>
   );

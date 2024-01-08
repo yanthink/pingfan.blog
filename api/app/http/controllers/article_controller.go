@@ -42,7 +42,7 @@ func (*articleController) Show(c *gin.Context) {
 
 	userId := c.GetInt64("userId")
 
-	article := services.Article.GetByID(id, "ID", "Title", "Content", "ViewCount", "LikeCount", "CommentCount", "FavoriteCount", "CreatedAt", "UserID")
+	article := services.Article.GetByID(id)
 	article.WithUserHasLiked(userId)
 	article.WithUserHasFavorited(userId)
 	article.IncrViewCount(1)
