@@ -61,7 +61,7 @@ func RegisterApiRouter(r *gin.Engine) {
 		authorized.PUT("comments/:id", controllers.Comment.Update)
 		authorized.POST("comments/:id/upvote", middleware.ActionThrottle("upvote"), controllers.Comment.Upvote)
 
-		authorized.POST("tags", controllers.Tag.Index)
+		authorized.POST("tags", controllers.Tag.Store)
 		authorized.PUT("tags/:id", controllers.Tag.Update)
 
 		authorized.POST("resources/upload", controllers.Resource.Upload)
