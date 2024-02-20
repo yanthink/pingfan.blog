@@ -68,7 +68,7 @@ const Content: React.FC<ContentProps> = ({ article, onChange, ...viewerProps }) 
           border-radius: 0;
         }
 
-        .content :global(.markdown-body *) {
+        .content :global(.markdown-body [id]) {
           scroll-margin-top: 60px;
         }
       `}</style>
