@@ -51,13 +51,8 @@ func LoginController(client *Client, req *Request) {
 	clientManager.DelUser(client)
 	clientManager.DelTempUser(client)
 
-	if userId > 0 {
-		client.UserID = userId
-	}
-
-	if tempUserId != "" {
-		client.TempUserID = tempUserId
-	}
+	client.UserID = userId
+	client.TempUserID = tempUserId
 
 	client.LoginTime = now
 	client.Heartbeat(now)
@@ -72,6 +67,9 @@ func LogoutController(client *Client) {
 	clientManager.DelTempUser(client)
 
 	app.Logger.Debug("用户退出", zap.Uint64("UserID", client.UserID), zap.String("TempUserID", client.TempUserID))
+
+	client.UserID = 0
+	client.TempUserID = ""
 
 	client.SendMsg(&Response{Event: Logout, Data: "success"})
 }
