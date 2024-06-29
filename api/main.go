@@ -1,12 +1,14 @@
 package main
 
 import (
+	"blog/app/events"
 	"blog/bootstrap"
 	"blog/config"
 	"fmt"
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 	"log"
+	"sync"
 	"time"
 )
 
@@ -40,5 +42,26 @@ func main() {
 
 	if cron != nil {
 		cron.Stop()
+	}
+
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		events.Wg.Wait()
+	}()
+
+	finish := make(chan struct{})
+	go func() {
+		defer close(finish)
+		wg.Wait()
+	}()
+
+	select {
+	case <-finish:
+		return
+	case <-time.After(60 * time.Second):
+		return
 	}
 }

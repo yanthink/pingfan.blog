@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/panjf2000/ants/v2"
 	"reflect"
+	"sync"
 )
 
 type EventListener interface {
@@ -12,6 +13,7 @@ type EventListener interface {
 }
 
 var eventListeners = make(map[string][]EventListener)
+var Wg sync.WaitGroup
 
 var antsPool, _ = ants.NewPool(300) // 使用ants库创建一个池，用于异步执行事件处理函数
 
@@ -39,9 +41,11 @@ func Fire(event any, payload ...any) (err error) {
 					return
 				}
 			} else {
+				Wg.Add(1)
 				listener := listener
 				_ = antsPool.Submit(func() {
 					_ = listener.Handle(payload[0])
+					Wg.Done()
 				})
 			}
 		}
