@@ -2,6 +2,8 @@ package validation
 
 import (
 	"blog/app/rules"
+	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/zh"
@@ -50,12 +52,12 @@ func init() {
 	_ = validate.RegisterValidation("captcha", rules.ValidateCaptcha)
 }
 
-func Validate(c *gin.Context, data any) {
+func Validate(c *gin.Context, dest any) {
 	defer func() {
 		if err := recover(); err != nil {
 			switch err.(type) {
 			case *runtime.TypeAssertionError:
-				panic(&Error{Message: "请求参数格式错误"})
+				panic(&Error{Message: fmt.Sprintf("%v", err)})
 			default:
 				panic(err)
 			}
@@ -66,40 +68,46 @@ func Validate(c *gin.Context, data any) {
 
 	// json 是通过 c.Request.Body 方法绑定数据，多次绑定需要使用 ShouldBindBodyWith 方法
 	if c.Request.Method != http.MethodGet && c.ContentType() == binding.MIMEJSON {
-		err = c.ShouldBindBodyWith(data, binding.JSON)
+		err = c.ShouldBindBodyWith(dest, binding.JSON)
 	} else {
-		err = c.ShouldBind(data)
+		err = c.ShouldBind(dest)
 	}
 
 	if err != nil {
-		message, errors := Translate(err, data)
-		panic(&Error{
-			Message: message,
-			Errors:  errors,
-			Err:     err,
-		})
+		var errs validator.ValidationErrors
+		if errors.As(err, &errs) {
+			message, errorsMap := Translate(errs, reflect.TypeOf(dest).Elem())
+			panic(&Error{
+				Message: message,
+				Errors:  errorsMap,
+				Err:     err,
+			})
+		}
+
+		panic(fmt.Sprintf("%v", err))
 	}
 }
 
 // Translate 翻译错误信息
-func Translate(err error, data ...any) (message string, errors map[string][]string) {
-	message = ""
-	errors = map[string][]string{}
+func Translate(errs validator.ValidationErrors, dv reflect.Type) (message string, errorsMap map[string][]string) {
+	errorsMap = map[string][]string{}
 
-	var t reflect.Type
-
-	if len(data) == 1 {
-		t = reflect.TypeOf(data[0]).Elem()
+	messages := map[string]string{
+		"username": "用户名格式错误。",
+		"phone":    "手机号码格式错误。",
+		"captcha":  "验证码错误。",
 	}
 
-	for i, err := range err.(validator.ValidationErrors) {
+	for i, err := range errs {
 		var msg string
-		var fieldName string
+		var tagName string
 
-		if t != nil {
-			if field, ok := t.FieldByName(err.StructField()); ok {
-				msg = field.Tag.Get("message")
-				fieldName = field.Tag.Get("form")
+		if field, ok := dv.FieldByName(err.StructField()); ok {
+			if msg = field.Tag.Get("message"); msg == "" {
+				msg = messages[err.Tag()]
+			}
+			if tagName = field.Tag.Get("json"); tagName == "" {
+				tagName = field.Tag.Get("form")
 			}
 		}
 
@@ -107,15 +115,15 @@ func Translate(err error, data ...any) (message string, errors map[string][]stri
 			msg = err.Translate(trans)
 		}
 
-		if fieldName == "" {
-			fieldName = err.Field()
+		if tagName == "" {
+			tagName = err.Field()
 		}
 
 		if i == 0 {
 			message = msg
 		}
 
-		errors[fieldName] = append(errors[fieldName], msg)
+		errorsMap[tagName] = append(errorsMap[tagName], msg)
 	}
 
 	return

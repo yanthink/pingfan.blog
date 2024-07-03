@@ -26,7 +26,7 @@ type articleService struct {
 func (*articleService) Paginate(paginator pagination.Pager) (articles models.Articles, count int64) {
 	tx := app.DB.
 		Model(articles).
-		Select("ID", "Title", "TextContent", "Preview", "ViewCount", "LikeCount", "CommentCount", "FavoriteCount", "CreatedAt", "UserID").
+		Omit("Content", "UpdatedAt").
 		Order("hotness DESC").
 		Order("id DESC").
 		Scopes(filters.New(&filters.ArticleFilter{}, paginator))
@@ -126,7 +126,7 @@ func (*articleService) SearchPaginate(keyword string, filters, fields, sortField
 	if len(ids) > 0 {
 		rows, _ := app.DB.
 			Model(articles).
-			Select("ID", "Title", "TextContent", "Preview", "ViewCount", "LikeCount", "CommentCount", "FavoriteCount", "CreatedAt", "UserID").
+			Omit("Content", "UpdatedAt").
 			Where("id IN ?", ids).Rows()
 
 		idToArticle := map[int64]*models.Article{}
@@ -150,7 +150,7 @@ func (*articleService) SearchPaginate(keyword string, filters, fields, sortField
 func (*articleService) CursorPaginate(paginator pagination.CursorPager) (articles models.Articles, cursor *pagination.Cursor) {
 	tx := app.DB.
 		Model(articles).
-		Select("ID", "Title", "TextContent", "Preview", "ViewCount", "CommentCount", "CreatedAt").
+		Omit("Content", "UpdatedAt").
 		Scopes(filters.New(&filters.ArticleFilter{}, paginator))
 
 	var err error
@@ -167,7 +167,9 @@ func (*articleService) GetByID(id int64, columns ...any) (article *models.Articl
 		columns = []any{"*"}
 	}
 
-	abortIf(app.DB.Select(columns[0], columns[1:]...).First(&article, id).RowsAffected == 0, "数据不存在", responses.CodeModelNotFound, http.StatusNotFound)
+	if app.DB.Select(columns[0], columns[1:]...).First(&article, id).RowsAffected == 0 {
+		abort("数据不存在。", responses.CodeModelNotFound, http.StatusNotFound)
+	}
 
 	return
 }
@@ -188,7 +190,7 @@ func (s *articleService) Add(article *models.Article) *models.Article {
 func (s *articleService) Update(id int64, article *models.Article, original *models.Article) *models.Article {
 	lockKey := fmt.Sprintf("%s_article_update_lock:%d", config.Redis.Prefix, id)
 	mutex := app.Redsync.NewMutex(lockKey, redsync.WithTries(1))
-	abortIf(mutex.Lock() != nil, "请勿重复操作")
+	abortIf(mutex.Lock() != nil, "请勿重复操作。")
 	defer mutex.Unlock()
 
 	article.ID = id

@@ -7,9 +7,9 @@ import (
 )
 
 type UpdateProfileRequest struct {
-	Name         *string `form:"name" json:"name" label:"用户名" binding:"required,username" message:"用户名格式不正确"`
+	Name         *string `form:"name" json:"name" label:"用户名" binding:"required,username"`
 	Email        *string `form:"email" json:"email" binding:"omitempty,email"`
-	EmailCode    string  `form:"emailCode" json:"emailCode" binding:"omitempty,captcha=Email EmailCodeKey" message:"验证码不正确"`
+	EmailCode    string  `form:"emailCode" json:"emailCode" binding:"omitempty,captcha=Email EmailCodeKey"`
 	EmailCodeKey string  `form:"emailCodeKey" json:"emailCodeKey"`
 	Avatar       string  `form:"avatar" json:"avatar" label:"头像" binding:"omitempty,url"`
 	Meta         *Meta   `form:"meta" json:"meta"`

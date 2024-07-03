@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"strings"
+	"time"
 )
 
 type ArticleFilter struct {
@@ -27,11 +28,11 @@ func (f *ArticleFilter) TagIDs(db *gorm.DB, id string) *gorm.DB {
 		Where("article_tags.tag_id IN ?", ids)
 }
 
-func (f *ArticleFilter) StartDate(db *gorm.DB, date string) *gorm.DB {
+func (f *ArticleFilter) StartDate(db *gorm.DB, date *time.Time) *gorm.DB {
 	return db.Where("created_at >= ?", date)
 }
 
-func (f *ArticleFilter) EndDate(db *gorm.DB, date string) *gorm.DB {
+func (f *ArticleFilter) EndDate(db *gorm.DB, date *time.Time) *gorm.DB {
 	return db.Where("created_at <= ?", date)
 }
 
