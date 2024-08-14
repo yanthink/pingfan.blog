@@ -98,7 +98,7 @@ func Send(notifiables []Notifiable) (err error) {
 					return false
 				}
 
-				emailNotify := (*user.Meta)["emailNotify"].(int64)
+				emailNotify := int64((*user.Meta)["emailNotify"].(float64))
 				if emailNotify == 0 || emailNotify == 2 && websocket.IsOnline(uint64(user.ID)) {
 					return false
 				}
