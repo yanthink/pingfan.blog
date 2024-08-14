@@ -25,13 +25,24 @@ func New(filter any, data any) func(db *gorm.DB) *gorm.DB {
 				continue
 			}
 
-			fieldName := dataType.Field(i).Name
-
+			field := dataType.Field(i)
 			if fieldValue := dataValue.Field(i); fieldValue.IsValid() && !fieldValue.IsZero() {
-				if method, ok := methods[fieldName]; ok {
+				if field.Anonymous {
+					if dataType.Kind() != reflect.Ptr {
+						if fieldValue.CanAddr() {
+							fieldValue = fieldValue.Addr()
+						} else {
+							fieldValue = reflect.New(dataType)
+							fieldValue.Elem().Set(fieldValue)
+						}
+					}
+
+					dbValue = reflect.ValueOf(db.Scopes(New(filter, fieldValue.Interface())))
+				} else if method, ok := methods[field.Name]; ok {
 					args := []reflect.Value{
 						dbValue,
 						fieldValue,
+						dataValue,
 					}
 
 					dbValue = method.Call(args)[0]

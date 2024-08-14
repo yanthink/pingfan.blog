@@ -1,6 +1,7 @@
 import request from '@/request/server';
 import Main from './main';
 import type { Metadata } from 'next';
+import qs from 'querystring';
 
 interface ArticleProps {
   params?: { id?: string };
@@ -8,7 +9,7 @@ interface ArticleProps {
 }
 
 async function getArticle(id: string, params: Record<string, any>) {
-  return request<API.Article>(`/api/articles/${id}?${new URLSearchParams(params)}`);
+  return request<API.Article>(`/api/articles/${id}?${qs.stringify(params)}`);
 }
 
 async function getComments(id: string, params: Record<string, any>) {

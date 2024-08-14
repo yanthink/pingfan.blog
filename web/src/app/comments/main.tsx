@@ -7,6 +7,7 @@ import { getComments, updateComment } from '@/services';
 import { useRouter } from '@/hooks';
 import PrettyTime from '@/components/PrettyTime';
 import { useLockFn } from 'ahooks';
+import qs from 'querystring';
 
 const Main: React.FC = () => {
   const router = useRouter();
@@ -55,7 +56,10 @@ const Main: React.FC = () => {
                 render: (_, record) => (
                   <div
                     onClick={() => {
-                      router.push(`/articles/${record.articleId}?pinnedId=${record.id}&parentId=${record.parentId}#评论`);
+                      router.push(`/articles/${record.articleId}?${qs.stringify({
+                        pinnedId: record.id,
+                        parentId: record.parentId,
+                      })}#评论`);
                     }}
                   >
                     {record.article?.title}

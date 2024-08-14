@@ -41,9 +41,14 @@ func (c *ArticleComment) Subject() string {
 	query.Add("pinnedId", fmt.Sprintf("%d", c.Comment.ID))
 	articleUrl.RawQuery = query.Encode()
 
+	name := "匿名用户"
+	if c.Comment.User.Name != nil {
+		name = *c.Comment.User.Name
+	}
+
 	return fmt.Sprintf(
 		"[%s](%s) • 评论了你的文章：[%s](%s)",
-		c.Comment.User.Name,
+		name,
 		c.Comment.User.Url(),
 		c.Comment.Article.Title,
 		articleUrl,

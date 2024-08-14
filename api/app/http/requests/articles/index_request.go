@@ -1,6 +1,7 @@
 package articles
 
 import (
+	"blog/app/models"
 	"blog/app/pagination"
 	"blog/app/validation"
 	"github.com/gin-gonic/gin"
@@ -8,13 +9,12 @@ import (
 )
 
 type IndexRequest struct {
-	pagination.Paginator
-	UserID    int64      `form:"userId" json:"userId"`
-	TagID     int64      `form:"tagId" json:"tagId"`
-	TagIDs    int64      `form:"tagIds" json:"tagIds"`
-	Order     string     `form:"order" json:"order"`
-	StartDate *time.Time `form:"startDate" json:"startDate" time_format:"2006-01-02"`
-	EndDate   *time.Time `form:"endDate" json:"endDate" time_format:"2006-01-02"`
+	pagination.Paginator `filter:"-"`
+	UserID               int64       `form:"userId"`
+	Order                string      `form:"order"`
+	StartDate            *time.Time  `form:"startDate" time_format:"2006-01-02"`
+	EndDate              *time.Time  `form:"endDate" time_format:"2006-01-02"`
+	Tag                  *models.Tag `form:"tag"`
 }
 
 func IndexValidate(c *gin.Context) (r *IndexRequest) {

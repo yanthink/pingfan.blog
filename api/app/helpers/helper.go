@@ -13,3 +13,7 @@ func ElemValue(s any) (value reflect.Value) {
 
 	return
 }
+
+func ToPointer[T any](value T) *T {
+	return &value
+}

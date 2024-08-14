@@ -36,9 +36,14 @@ func (c *ArticleLike) FromUser() (user *models.User) {
 func (c *ArticleLike) Subject() string {
 	articleUrl := c.Like.Article.Url()
 
+	name := "匿名用户"
+	if c.Like.User.Name != nil {
+		name = *c.Like.User.Name
+	}
+
 	return fmt.Sprintf(
 		"[%s](%s) • 赞了你的文章：[%s](%s)",
-		c.Like.User.Name,
+		name,
 		c.Like.User.Url(),
 		c.Like.Article.Title,
 		articleUrl,

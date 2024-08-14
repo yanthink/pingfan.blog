@@ -8,15 +8,15 @@ import (
 type UpvoteFilter struct {
 }
 
-func (f *UpvoteFilter) UserID(db *gorm.DB, id int64) *gorm.DB {
+func (f *UpvoteFilter) UserID(db *gorm.DB, id int64, _ any) *gorm.DB {
 	return db.Where("user_id = ?", id)
 }
 
-func (f *UpvoteFilter) CommentID(db *gorm.DB, id int64) *gorm.DB {
+func (f *UpvoteFilter) CommentID(db *gorm.DB, id int64, _ any) *gorm.DB {
 	return db.Where("comment_id = ?", id)
 }
 
-func (f *UpvoteFilter) Sort(db *gorm.DB, sort string) *gorm.DB {
+func (f *UpvoteFilter) Sort(db *gorm.DB, sort string, _ any) *gorm.DB {
 	if strings.ToUpper(sort) == "DESC" {
 		return db.Order("id DESC")
 	}

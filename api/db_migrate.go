@@ -2,6 +2,7 @@ package main
 
 import (
 	"blog/app"
+	"blog/app/helpers"
 	"blog/app/models"
 	"blog/bootstrap"
 	"golang.org/x/crypto/bcrypt"
@@ -24,7 +25,7 @@ func main() {
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
 	app.DB.Create(&models.User{
-		Name:     "admin",
+		Name:     helpers.ToPointer("admin"),
 		Password: string(hashedPassword),
 		Role:     models.UserRoleManage,
 	})
